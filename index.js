@@ -25,8 +25,23 @@ async function run() {
     const database = client.db("rentive_car");
     const productsCollection = database.collection("allProducts");
     const reviewCollection = database.collection("review");
+    const ordersCollection = database.collection("orders");
 
     //get
+    app.get("/allProducts/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const product = await productsCollection.findOne(query);
+      res.json(product);
+    });
+
+    app.get("/carExplore/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const product = await productsCollection.findOne(query);
+      res.json(product);
+    });
+
     app.get("/allProducts", async (req, res) => {
       const result = await productsCollection.find({}).limit(6).toArray();
       res.json(result);
@@ -42,9 +57,29 @@ async function run() {
       res.json(review);
     });
 
+    // get my order
+    app.get("/allOrders/:email", async (req, res) => {
+      const myOrder = await ordersCollection.find({ email: req.params?.email }).toArray();
+      res.json(myOrder);
+    });
+
     // post review
     app.post("/allReview", async (req, res) => {
       const result = await reviewCollection.insertOne(req.body);
+      res.json(result);
+    });
+
+    // post order
+    app.post("/orders", async (req, res) => {
+      const order = await ordersCollection.insertOne(req.body);
+      res.json(order);
+    });
+
+    // delete
+    app.delete("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await ordersCollection.deleteOne(query);
       res.json(result);
     });
   } finally {
