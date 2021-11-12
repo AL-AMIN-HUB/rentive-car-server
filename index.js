@@ -64,6 +64,12 @@ async function run() {
       res.json(myOrder);
     });
 
+    // get all orders
+    app.get("/allOrdersManage", async (req, res) => {
+      const allOrder = await ordersCollection.find({}).toArray();
+      res.json(allOrder);
+    });
+
     //
     app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
@@ -130,6 +136,16 @@ async function run() {
       res.json(result);
     });
 
+    // update order status
+    /* app.put("/update/status", async (req, res) => {
+      const order = req.body;
+      const filter = { email: order.email };
+      const updateDoc = {
+        $set: { status: order.updateStatus },
+      };
+      const result = await ordersCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    }); */
     //
   } finally {
     // await client.close();
