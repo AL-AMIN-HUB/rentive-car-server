@@ -115,6 +115,24 @@ async function run() {
       res.json(result);
     });
 
+    // update product
+    app.put("/updateProduct/:id", async (req, res) => {
+      const id = req.params.id;
+      const updateProduct = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          key: updateProduct.key,
+          name: updateProduct.name,
+          price: updateProduct.price,
+          img: updateProduct.img,
+          desc: updateProduct.desc,
+        },
+      };
+      const result = await productsCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    });
+
     // save users
     app.post("/users", async (req, res) => {
       const user = req.body;
