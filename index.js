@@ -69,6 +69,27 @@ async function run() {
       const allOrder = await ordersCollection.find({}).toArray();
       res.json(allOrder);
     });
+    // update status
+    app.get("/updateStatus/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const allOrder = await ordersCollection.findOne(query);
+      res.json(allOrder);
+    });
+
+    app.put("/updateStatus/:id", async (req, res) => {
+      const id = req.params.id;
+      const statusOrder = req.body;
+      console.log(statusOrder);
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          status: statusOrder.status,
+        },
+      };
+      const result = await ordersCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    });
 
     //
     app.get("/users/:email", async (req, res) => {
@@ -161,17 +182,6 @@ async function run() {
       const result = await usersCollection.updateOne(filter, updateDoc);
       res.json(result);
     });
-
-    // update order status
-    /* app.put("/update/status", async (req, res) => {
-      const order = req.body;
-      const filter = { email: order.email };
-      const updateDoc = {
-        $set: { status: order.updateStatus },
-      };
-      const result = await ordersCollection.updateOne(filter, updateDoc);
-      res.json(result);
-    }); */
     //
   } finally {
     // await client.close();
